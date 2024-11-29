@@ -1,3 +1,7 @@
+# Etxra files
+try_llama/modeling_llama_bl.py
+learnable_lora/lora/layer_with_bl.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -5,6 +9,7 @@ __pycache__/
 
 # C extensions
 *.so
+.DS_Store
 
 # Distribution / packaging
 .Python

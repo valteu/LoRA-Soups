@@ -1,0 +1,8 @@
+[
+    {"instruction": "Please use the information in the provided context to respond to the question below. If there is not enough information provided, answer with 'Not in context'.\n\nContext: Measures of RNA abundance are important for many areas of biology and often obtained from high-throughput RNA sequencing methods such as Illumina sequence data. These measures need to be normalized to remove technical biases inherent in the sequencing approach, most notably the length of the RNA species and the sequencing depth of a sample. These biases are corrected in the widely used reads per kilobase per million reads (RPKM) measure.. \n\nQuestion: What is a popular mesaure of gene expression in RNA-seq experiments?", "input": "", "output": "the correct answer is A commonly used measure for gene expression in RNA-seq experiments is  Reads Per Kilobase per Million mapped reads (RPKM). In ocasions, and to account for partially mapped read, read Fragments per Kilobase per Million mapped reads (FPKM) is alternatively used.", "answer": "A commonly used measure for gene expression in RNA-seq experiments is  Reads Per Kilobase per Million mapped reads (RPKM). In ocasions, and to account for partially mapped read, read Fragments per Kilobase per Million mapped reads (FPKM) is alternatively used."}, 
+    {
+        "instruction": "What are the three primary colors?",
+        "input": "",
+        "output": "the correct answer is the three primary colors are red, blue, and yellow."
+    }
+]
