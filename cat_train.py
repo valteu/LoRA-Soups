@@ -13,7 +13,7 @@ from transformers import (
 )
 import peft
 from typing import List
-from datasets import load_dataset
+from datasets import load_dataset, load_from_disk
 import transformers
 import torch
 import argparse
@@ -24,6 +24,7 @@ load_dotenv()
 os.environ['WANDB_MODE'] = "offline"
 TOKEN = os.getenv("HF_TOKEN")
 
+from trainer_callback import RougeCallback
 
 from peft import (  # noqa: E402
     LoraConfig,
@@ -140,13 +141,22 @@ def train(
 
     lora_weights_names = [f"adapter_{str(i)}" for i in range(len(lora_weights))]
     num_adapters = len(lora_weights)
-    model = CustomPeftModel.from_pretrained(
+    # model = CustomPeftModel.from_pretrained(
+    #     model,
+    #     lora_weights[0],
+    #     torch_dtype=torch.float16,
+    #     device_map={"": 0},
+    #     adapter_name='adapter_0',
+    # )
+    from peft import PeftModel
+    model = PeftModel.from_pretrained(
         model,
         lora_weights[0],
         torch_dtype=torch.float16,
         device_map={"": 0},
-        adapter_name='adapter_0',
+        adapter_name=lora_weights_names[0],
     )
+
     for i in range(1, num_adapters):
         model.load_adapter(lora_weights[i], adapter_name=lora_weights_names[i])
     model.base_model.set_adapter(lora_weights_names)
@@ -249,11 +259,13 @@ def train(
             kwargs["model"].save_pretrained(peft_model_path)
             pytorch_model_path = os.path.join(checkpoint_folder, "pytorch_model.bin")
             return control
+
+    val_dataset = load_from_disk("/sc/projects/sci-herbrich/chair/lora-bp/tunepare/datasets/nlg_rocstories_title_answer_generation")["qa_validation"]
     trainer = Trainer(
         model=model,
         train_dataset=train_data,
         eval_dataset=val_data,
-        callbacks=[SavePeftModelCallback],
+        callbacks=[SavePeftModelCallback, RougeCallback(val_dataset, tokenizer)],
         args=transformers.TrainingArguments(
             per_device_train_batch_size=micro_batch_size,
             gradient_accumulation_steps=gradient_accumulation_steps,

@@ -15,4 +15,4 @@ python -m cat_train \
     --val_set_size 120 \
     --eval_step 80 \
     --save_step 80 \
-    --lora_weights models/math models/code
+    --lora_weights models/code

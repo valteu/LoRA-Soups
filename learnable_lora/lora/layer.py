@@ -25,6 +25,7 @@ from peft.tuners.tuners_utils import BaseTunerLayer
 from peft.utils.other import transpose
 import torch.nn.init as init
 
+
 class LoraLayer(BaseTunerLayer):
     # List all names of layers that may contain adapter weights
     adapter_layer_names = ["lora_A", "lora_B", "lora_embedding_A", "lora_embedding_B"]
@@ -39,7 +40,7 @@ class LoraLayer(BaseTunerLayer):
         # For Embedding layer
         self.lora_embedding_A = nn.ParameterDict({})
         self.lora_embedding_B = nn.ParameterDict({})
-        ### For LoRA learnable weights
+        # For LoRA learnable weights
         self.lora_learnable_weights = nn.ParameterDict({})
         self.lora_mix_mode = "cat"
         ###
@@ -79,7 +80,8 @@ class LoraLayer(BaseTunerLayer):
             self.lora_A[adapter_name] = nn.Linear(self.in_features, r, bias=False)
             self.lora_B[adapter_name] = nn.Linear(r, self.out_features, bias=False)
             self.scaling[adapter_name] = lora_alpha / r
-            self.lora_learnable_weights[adapter_name] = nn.Parameter(torch.randn(1), requires_grad=True)
+            # self.lora_learnable_weights[adapter_name] = nn.Parameter(torch.randn(self.in_features), requires_grad=True)
+            self.lora_learnable_weights[adapter_name] = nn.Parameter(torch.ones(1), requires_grad=True)
         if init_lora_weights:
             # print("init lora weights")
             self.reset_lora_parameters(adapter_name)
@@ -326,11 +328,12 @@ class Linear(nn.Linear, LoraLayer):
             # linear from pretrained weight matrix
             result = self._linear(x)
             assert len(list(self.lora_learnable_weights)) == len(self.active_adapters)
-            wts_before_softmax = torch.cat(list(self.lora_learnable_weights.values()),dim=0)
-            wts_after_softmax = self.softmax(wts_before_softmax)
+            wts_before_softmax = torch.cat(list(self.lora_learnable_weights.values()), dim=0)
+            # wts_after_softmax = self.softmax(wts_before_softmax)
+            wts_after_softmax = wts_before_softmax
 
-            if self.lora_mix_mode == "cat": 
-                for idx,active_adapter in enumerate(self.active_adapters):
+            if self.lora_mix_mode == "cat":
+                for idx, active_adapter in enumerate(self.active_adapters):
                     if active_adapter not in self.lora_A.keys():
                         continue
                     lora_A = self.lora_A[active_adapter]
@@ -338,10 +341,10 @@ class Linear(nn.Linear, LoraLayer):
                     dropout = self.lora_dropout[active_adapter]
                     scaling = self.scaling[active_adapter]
                     x = x.to(lora_A.weight.dtype)
-                    result += lora_B(lora_A(dropout(x))) * scaling * wts_after_softmax[idx]
+                    result += wts_after_softmax[idx] * lora_B(lora_A(dropout(x))) * scaling
 
             elif self.lora_mix_mode == "linear":
-                for idx,active_adapter in enumerate(self.active_adapters):
+                for idx, active_adapter in enumerate(self.active_adapters):
                     if idx == 0:
                         lora_A_sums = torch.zeros_like(self.lora_A[active_adapter].weight)
                         lora_B_sums = torch.zeros_like(self.lora_B[active_adapter].weight)
@@ -356,7 +359,6 @@ class Linear(nn.Linear, LoraLayer):
                 x = x.to(lora_A.weight.dtype)
                 result += (dropout(x) @ lora_A_sums.T) @ lora_B_sums.T
 
-                
         result = result.to(previous_dtype)
         # print("result grad", result.requires_grad) # is True
         return result
