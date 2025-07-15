@@ -35,7 +35,7 @@ eval_type_backport==0.2.0
 evaluate==0.4.1
 exceptiongroup==1.2.0
 executing==2.0.1
-faiss-gpu==1.7.2
+# faiss-gpu
 filelock==3.13.1
 fire==0.5.0
 flash-attn==2.5.8
@@ -79,7 +79,7 @@ langchain-core==0.1.33
 langchain-text-splitters==0.0.1
 langsmith==0.1.31
 Levenshtein==0.25.1
--e git+https://github.com/sail-sg/lorahub.git@df73afe5f38d9ff0fd1cd43774be51c79c581cc3#egg=lorahub
+# -e git+https://github.com/sail-sg/lorahub.git@df73afe5f38d9ff0fd1cd43774be51c79c581cc3#egg=lorahub
 Mako==1.3.5
 markdown-it-py==3.0.0
 MarkupSafe==2.1.3
@@ -87,7 +87,7 @@ marshmallow==3.21.1
 matplotlib==3.8.4
 matplotlib-inline==0.1.7
 mdurl==0.1.2
-mpi4py @ file:///croot/mpi4py_1671223370575/work
+# mpi4py @ file:///croot/mpi4py_1671223370575/work
 mpmath==1.3.0
 multidict==6.0.4
 multiprocess==0.70.14
@@ -170,7 +170,7 @@ termcolor==2.4.0
 threadpoolctl==3.2.0
 together==1.2.3
 tokenizers==0.15.2
-torch==2.1.1
+# torch==2.1.1
 tornado==6.4.1
 tqdm==4.66.4
 traitlets==5.14.3

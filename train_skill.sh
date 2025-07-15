@@ -3,7 +3,7 @@
 # Example of fine-tuning on math with MetaMathQA
 python skill_finetune.py \
     --model LLaMA-7B \
-    --base_model yahma/llama-7b-hf \
+    --base_model meta-llama/Llama-3.2-1B-Instruct \
     --adapter LoRA \
     --data_path data/skill_datasets/metamath.json \
     --output_dir models/math \

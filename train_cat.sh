@@ -2,8 +2,8 @@
 
 ## CAT training
 python cat_train.py \
-    --model LLaMA-7B \
-    --base_model yahma/llama-7b-hf \
+    --model LLaMA-1B \
+    --base_model meta-llama/Llama-3.2-1B-Instruct \
     --adapter LoRA \
     --data_path data/skill_datasets/mix/metamath_code_alpaca_10k.json \
     --output_dir models/math_code_cat \

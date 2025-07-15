@@ -162,7 +162,7 @@ def train(
 
     if model.config.model_type == "llama":
         # Due to the name of transformers' LlamaTokenizer, we have to do this
-        tokenizer = LlamaTokenizer.from_pretrained("yahma/llama-7b-hf", token=TOKEN)
+        tokenizer = LlamaTokenizer.from_pretrained("meta-llama/Llama-3.2-1B-Instruct", token=TOKEN)
     else:
         tokenizer = AutoTokenizer.from_pretrained(base_model, trust_remote_code=True)
 
